@@ -4,6 +4,8 @@ package com.example.socialmedia.controller;
 import com.example.socialmedia.Repository.UserRepository;
 import com.example.socialmedia.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.socialmedia.Models.User;
 import java.util.List;
@@ -55,5 +57,15 @@ return  updatedUser;
         return users;
 
  }
+
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<?> deleteUserById(@PathVariable("userId") Integer userId) {
+        try {
+            userService.deleteUserById(userId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting user with ID: " + userId);
+        }
+    }
 
 }

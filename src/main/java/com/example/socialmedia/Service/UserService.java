@@ -13,4 +13,5 @@ public interface UserService {
     public List<User> searchUser(String query);
 
 
+    void deleteUserById(Integer userId);
 }

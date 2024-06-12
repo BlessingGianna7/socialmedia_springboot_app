@@ -82,7 +82,15 @@ public class UserServiceImplementation implements UserService{
     public List<User> searchUser(String query) {
         return userRepository.searchUser(query);
     }
-
+    @Override
+    public void deleteUserById(Integer userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            userRepository.delete(userOptional.get());
+        } else {
+            throw new IllegalArgumentException("User with ID " + userId + " not found.");
+        }
+    }
 
 
 }

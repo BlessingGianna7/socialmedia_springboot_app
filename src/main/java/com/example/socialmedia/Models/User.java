@@ -2,9 +2,7 @@ package com.example.socialmedia.Models;
 
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,20 +13,35 @@ import java.util.List;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
     private String gender;
+    @ElementCollection
     private List<Integer> followings = new ArrayList<>();
+
+    @ElementCollection
     private List<Integer> followers = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_saved_posts",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id")
+    )
+    private List<Post> savedPosts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Post> posts = new ArrayList<>();
 
     public User() {
     }
 
-    public User(Integer id, String firstName, String lastName, String email, String password, String gender, List<Integer>followers, List<Integer> followings
-    ) {
+    public User(Integer id, String firstName, String lastName, String email, String password, String gender, List<Integer>followers, List<Integer> followings, List<Post>
+savedPosts    ) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -37,6 +50,7 @@ public class User {
         this.gender= gender;
         this.followers= followers;
         this.followings= followings;
+        this.savedPosts= savedPosts;
     }
 
 
@@ -110,5 +124,13 @@ public class User {
 
     public void setFollowers(List<Integer> followers) {
         this.followers = followers;
+    }
+
+    public List<Post> getSavedPosts() {
+        return savedPosts;
+    }
+
+    public void setSavedPosts(List<Post> savedPosts) {
+        this.savedPosts = savedPosts;
     }
 }
