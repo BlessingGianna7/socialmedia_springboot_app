@@ -1,7 +1,6 @@
 package com.example.socialmedia.Models;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

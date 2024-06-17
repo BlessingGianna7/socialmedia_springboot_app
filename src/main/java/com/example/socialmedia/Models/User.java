@@ -3,7 +3,6 @@ package com.example.socialmedia.Models;
 
 
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +32,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "post_id")
     )
     private List<Post> savedPosts = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts = new ArrayList<>();
