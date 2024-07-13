@@ -2,6 +2,7 @@ package com.example.socialmedia.Models;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class User {
     private List<Integer> followers = new ArrayList<>();
 
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
             name = "user_saved_posts",
             joinColumns = @JoinColumn(name = "user_id"),

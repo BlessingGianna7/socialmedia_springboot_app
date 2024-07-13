@@ -1,5 +1,6 @@
 package com.example.socialmedia.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class Post {
     private String video;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+//    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     private LocalDateTime createdAt;

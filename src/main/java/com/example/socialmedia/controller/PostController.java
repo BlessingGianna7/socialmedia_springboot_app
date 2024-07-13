@@ -26,7 +26,7 @@ public ResponseEntity<Post> createPost(@RequestBody Post post, @PathVariable Int
         return new ResponseEntity<>(createdPost, HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/posts/{postId}/{userId}")
+    @DeleteMapping("/posts/{postId}/user/{userId}")
     public ResponseEntity<ApiResponse> deletePost(@PathVariable Integer postId, @PathVariable Integer userId) throws Exception {
 String message= postService.deletePost(postId, userId);
 ApiResponse res = new ApiResponse(message, true);
