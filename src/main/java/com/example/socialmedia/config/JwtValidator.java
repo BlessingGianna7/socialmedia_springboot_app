@@ -17,22 +17,20 @@ import java.util.List;
 
 import static com.example.socialmedia.config.JwtProvider.getEmailFromJwtToken;
 
-public class jwtValidator extends OncePerRequestFilter {
+public class JwtValidator extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = request.getHeader(JwtConstant.JWT_HEADER);
-        if (jwt != null) {
+        if (jwt != null && jwt.startsWith("Bearer ")) {
             try {
-                String email = getEmailFromJwtToken(jwt);
+                String email = getEmailFromJwtToken(jwt.substring(7));
                 List<GrantedAuthority> authorities = new ArrayList<>();
                 Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {
-                throw new BadCredentialsException("Invalid token....");
+                throw new BadCredentialsException("Invalid token....", e);
             }
-        } else {
-            throw new BadCredentialsException("Invalid token...");
         }
         filterChain.doFilter(request, response);
     }

@@ -16,21 +16,22 @@ public class AppConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.sessionManagement(management-> management.sessionCreationPolicy(
-                SessionCreationPolicy.STATELESS))
+        http.sessionManagement(management -> management.sessionCreationPolicy(
+                        SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/auth/**").permitAll()  // Allow access to auth endpoints
+                        .requestMatchers("/api/**").authenticated()  // Protect API endpoints
                         .anyRequest().permitAll()
                 )
                 .httpBasic(httpBasic -> {})
-                .addFilterBefore( new jwtValidator(), BasicAuthenticationFilter.class)
+                .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable());
 
         return http.build();
     }
 
     @Bean
-   public PasswordEncoder passwordEncoder(){
-        return  new BCryptPasswordEncoder();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

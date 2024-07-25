@@ -10,25 +10,26 @@ import java.util.Date;
 
 public class JwtProvider {
 
-    private static SecretKey key= Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
-    public  static String generateToken(Authentication auth)
-    {
+    private static SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
 
-        String jwt = Jwts.builder()
-                .setIssuer("Gianna").setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime()+86400000))
+    public static String generateToken(Authentication auth) {
+        return Jwts.builder()
+                .setIssuer("Gianna")
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + 86400000))
                 .claim("email", auth.getName())
                 .signWith(key)
                 .compact();
-        return  jwt;
     }
-    public static String getEmailFromJwtToken(String jwt){
 
-        jwt = jwt.substring(7);
+    public static String getEmailFromJwtToken(String jwt) {
+        jwt = jwt.startsWith("Bearer ") ? jwt.substring(7) : jwt; // Remove 'Bearer ' prefix if present
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key).build().parseClaimsJwt(jwt).getBody();
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(jwt) // Changed parseClaimsJwt to parseClaimsJws
+                .getBody();
 
-         String email = String.valueOf(claims.get("email"));
-         return  email;
+        return claims.get("email", String.class); // Changed to directly get the email claim as String
     }
 }
