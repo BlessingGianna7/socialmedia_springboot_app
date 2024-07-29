@@ -4,9 +4,14 @@ import com.example.socialmedia.Models.Comment;
 import com.example.socialmedia.Models.Post;
 import com.example.socialmedia.Models.User;
 import com.example.socialmedia.Repository.CommentRepository;
+import com.example.socialmedia.Repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.socialmedia.Service.UserService;
 import  com.example.socialmedia.Service.PostService;
+import java.util.Optional;
+
+import java.time.LocalDateTime;
+
 public class CommentServiceImplementation implements CommentService {
 
 
@@ -16,7 +21,11 @@ private  PostService postService;
 @Autowired
 private UserService userService;
 
+@Autowired
+private PostRepository postRepository;
 
+
+@Autowired
 private CommentRepository commentRepository;
 
     @Override
@@ -24,19 +33,41 @@ private CommentRepository commentRepository;
 
        User user = userService.findUserById(userId);
         Post post = postService.findPostById(postId);
+        comment.setUser(user);
+        comment.setContent(comment.getContent());
+        comment.setCreatedAt(LocalDateTime.now());
+         Comment savedComment= commentRepository.save(comment);
 
-        return null;
+         post.getComments().add(savedComment);
+         postRepository.save(post);
+
+        return savedComment;
 
 
     }
 
     @Override
-    public Comment findCommentById(Integer commentId) {
-        return null;
+    public Comment findCommentById(Integer commentId) throws Exception{
+Optional<Comment> opt = commentRepository.findById(commentId);
+
+if(opt.isEmpty()){
+  throw new Exception("comment does not exist") ;
+}
+
+        return opt.get();
     }
 
     @Override
-    public Comment likeComment(Integer CommentId, Integer userId) {
-        return null;
+    public Comment likeComment(Integer CommentId, Integer userId) throws Exception {
+      Comment comment= findCommentById(CommentId);
+User user = userService.findUserById(userId);
+
+if(!comment.getLikes().contains(user)){
+    comment.getLikes().add(user);
+
+}
+else comment.getLikes().remove(user);
+
+        return commentRepository.save(comment);
     }
 }
