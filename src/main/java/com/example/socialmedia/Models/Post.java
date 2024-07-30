@@ -22,20 +22,32 @@ public class Post {
 
     private LocalDateTime createdAt;
 
+    @OneToMany
+    private List<Comment> comments = new ArrayList<>();
+
     @ManyToMany(mappedBy = "savedPosts",cascade = {CascadeType.ALL})
     private List<User> liked = new ArrayList<>();
     public Post(){
 
     }
 
-    public Post(Integer id, String caption, String image, String video, User user, List<User> liked,LocalDateTime createdAt) {
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public Post(Integer id, String caption, String image, String video, User user, LocalDateTime createdAt, List<Comment> comments, List<User> liked) {
         this.id = id;
         this.caption = caption;
         this.image = image;
         this.video = video;
         this.user = user;
-        this.liked = liked;
         this.createdAt = createdAt;
+        this.comments = comments;
+        this.liked = liked;
     }
 
     public Integer getId() {

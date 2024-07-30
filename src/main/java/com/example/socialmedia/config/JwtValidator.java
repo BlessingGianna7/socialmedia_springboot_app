@@ -1,35 +1,37 @@
 package com.example.socialmedia.config;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.crypto.SecretKey;
-import java.util.Date;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class JwtProvider {
+import static com.example.socialmedia.config.JwtProvider.getEmailFromJwtToken;
 
-    private static SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
+public class JwtValidator extends OncePerRequestFilter {
 
-    public static String generateToken(Authentication auth) {
-        return Jwts.builder()
-                .setIssuer("Gianna")
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + 86400000))
-                .claim("email", auth.getName())
-                .signWith(key)
-                .compact();
-    }
-
-    public static String getEmailFromJwtToken(String jwt) {
-        jwt = jwt.startsWith("Bearer ") ? jwt.substring(7) : jwt; // Remove 'Bearer ' prefix if present
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(jwt) // Changed parseClaimsJwt to parseClaimsJws
-                .getBody();
-
-        return claims.get("email", String.class); // Changed to directly get the email claim as String
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String jwt = request.getHeader(JwtConstant.JWT_HEADER);
+        if (jwt != null && jwt.startsWith("Bearer ")) {
+            try {
+                String email = getEmailFromJwtToken(jwt.substring(7));
+                List<GrantedAuthority> authorities = new ArrayList<>();
+                Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, authorities);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (Exception e) {
+                throw new BadCredentialsException("Invalid token....", e);
+            }
+        }
+        filterChain.doFilter(request, response);
     }
 }
