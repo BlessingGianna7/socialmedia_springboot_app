@@ -47,27 +47,3 @@ private CommentRepository commentRepository;
     }
 
     @Override
-    public Comment findCommentById(Integer commentId) throws Exception{
-Optional<Comment> opt = commentRepository.findById(commentId);
-
-if(opt.isEmpty()){
-  throw new Exception("comment does not exist") ;
-}
-
-        return opt.get();
-    }
-
-    @Override
-    public Comment likeComment(Integer CommentId, Integer userId) throws Exception {
-      Comment comment= findCommentById(CommentId);
-User user = userService.findUserById(userId);
-
-if(!comment.getLikes().contains(user)){
-    comment.getLikes().add(user);
-
-}
-else comment.getLikes().remove(user);
-
-        return commentRepository.save(comment);
-    }
-}
