@@ -21,3 +21,15 @@ public class JwtProvider {
                 .signWith(key)
                 .compact();
     }
+
+    public static String getEmailFromJwtToken(String jwt) {
+        jwt = jwt.startsWith("Bearer ") ? jwt.substring(7) : jwt; // Remove 'Bearer ' prefix if present
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(jwt) // Changed parseClaimsJwt to parseClaimsJws
+                .getBody();
+
+        return claims.get("email", String.class); // Changed to directly get the email claim as String
+    }
+}
