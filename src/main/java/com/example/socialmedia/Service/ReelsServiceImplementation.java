@@ -34,7 +34,10 @@ private ReelsRepository reelsRepository;
     }
 
     @Override
-    public List<Reels> findUsersReel(Integer userId) {
-        return null;
+    public List<Reels> findUsersReel(Integer userId) throws Exception {
+
+
+userService.findUserById(userId);
+        return reelsRepository.findByUserId(userId);
     }
 }
