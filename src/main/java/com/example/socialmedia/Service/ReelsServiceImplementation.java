@@ -4,9 +4,11 @@ import com.example.socialmedia.Models.Reels;
 import com.example.socialmedia.Models.User;
 import com.example.socialmedia.Repository.ReelsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ReelsServiceImplementation implements ReelsService{
 
     @Autowired
