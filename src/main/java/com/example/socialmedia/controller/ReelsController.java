@@ -35,3 +35,11 @@ public class ReelsController {
    }
 
 
+   @GetMapping("/api/reels/user/{userId}")
+   public Reels findUsersReels(@PathVariable Integer userId) throws Exception {
+
+      List<Reels> reels = reelsService.findUsersReel(userId);
+
+      return (Reels) reels;
+   }
+}
