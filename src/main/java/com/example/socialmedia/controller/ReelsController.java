@@ -26,6 +26,12 @@ public class ReelsController {
    }
 
 
-   @
+   @GetMapping("/api/reels")
+   public Reels findAllReels(){
+
+      List<Reels> reels = reelsService.findAllReels();
+
+      return (Reels) reels;
+   }
 
 
