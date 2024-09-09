@@ -76,14 +76,3 @@ public ResponseEntity<List<Post>> findUsersPost(@PathVariable Integer userId){
     }
 
 
-    @PutMapping("/api/posts/like/{postId}")
-    public ResponseEntity<Post> likePostHandler(@PathVariable Integer postId,  @RequestHeader("Authorization")String jwt) throws Exception {
-
-        User reqUser = userService.findUserByJwt(jwt);
-        Post post=postService.likePost(postId,reqUser.getId());
-
-        return new ResponseEntity<Post>(post, HttpStatus.ACCEPTED);
-    }
-
-
-}
