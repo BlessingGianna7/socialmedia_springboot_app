@@ -1,5 +1,6 @@
 package com.example.socialmedia.controller;
 
+import org.springframework.http.HttpStatus;
 
 import com.example.socialmedia.Models.User;
 import com.example.socialmedia.Repository.UserRepository;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/auth")
@@ -38,11 +40,12 @@ private UserService userService;
     public AuthResponse createUser(@RequestBody User user) throws Exception{
 
         User isExist = userRepository.findByEmail(user.getEmail());
-        if(isExist!= null){
-            throw new Exception("this email already used with another account");
+        if (isExist != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "This email is already registered.");
         }
 
-User newUser= new User();
+
+        User newUser= new User();
         newUser.setEmail(user.getEmail());
         newUser.setFirstName(user.getFirstName());
         newUser.setLastName(user.getLastName());
@@ -60,7 +63,7 @@ String token= JwtProvider.generateToken(authentication);
 
 }
 
-@PostMapping("/signin")
+@PostMapping("/login")
 public AuthResponse signin(@RequestBody LoginRequest loginRequest){
 
       Authentication authentication = authenticate(loginRequest.getEmail(), loginRequest.getPassword());
