@@ -23,6 +23,7 @@ public class JwtValidator extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = request.getHeader(JwtConstant.JWT_HEADER);
         if (jwt != null && jwt.startsWith("Bearer ")) {
+            String token = jwt.substring(7); // Remove the 'Bearer ' prefix here
             try {
                 String email = getEmailFromJwtToken(jwt.substring(7));
                 List<GrantedAuthority> authorities = new ArrayList<>();

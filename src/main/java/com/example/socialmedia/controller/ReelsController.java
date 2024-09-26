@@ -18,20 +18,20 @@ public class ReelsController {
    private UserService userService;
 
    @PostMapping("/api/reels")
-   public Reels createReels(@RequestBody Reels reel, @RequestHeader("Authorization") String jwt){
+   public Reels createReels(@RequestBody Reels reel, @RequestHeader("Authorization") String jwt) {
 
-    User reqUser =userService.findUserByJwt(jwt);
-      Reels createdReels = reelsService.createReel(reel,reqUser);
-   return  createdReels;
+      User reqUser = userService.findUserByJwt(jwt);
+      Reels createdReels = reelsService.createReel(reel, reqUser);
+      return createdReels;
    }
 
 
    @GetMapping("/api/reels")
-   public Reels findAllReels(){
+   public List<Reels> findAllReels() {
 
       List<Reels> reels = reelsService.findAllReels();
 
-      return (Reels) reels;
+      return reels;
    }
-
+}
 
