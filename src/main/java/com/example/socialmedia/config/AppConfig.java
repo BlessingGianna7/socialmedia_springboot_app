@@ -29,6 +29,7 @@ public class AppConfig {
         http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/auth/**").permitAll()  // Allow access to auth endpoints
+                        .requestMatchers("/signup").permitAll()   // Allow access to signup without auth
                         .requestMatchers("/api/**").authenticated()  // Protect API endpoints
                         .anyRequest().permitAll()
                 )
