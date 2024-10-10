@@ -23,24 +23,25 @@ public class AppConfig {
         this.customerUserDetailsService = customerUserDetailsService;
     }
 
-    // Define the Security Filter Chain
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/auth/**").permitAll()  // Allow access to auth endpoints
-                        .requestMatchers("/signup").permitAll()   // Allow access to signup without auth
-                        .requestMatchers("/api/**").authenticated()  // Protect API endpoints
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/signup").permitAll()
+                        .requestMatchers("/auth/signup").permitAll()
+
+                        .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .httpBasic(httpBasic -> {})
-                .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)  // JWT Validator Filter
+                .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable());  // Disable CSRF for stateless API
 
         return http.build();
     }
 
-    // Configure the AuthenticationManager to use the UserDetailsService
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
